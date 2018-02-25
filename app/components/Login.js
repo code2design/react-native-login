@@ -34,12 +34,33 @@ export default class Login extends Component<Props> {
   		this.props.navigation.navigate('Profile');
   	}
 
-
-
   }
 
   login = () => {
-  	alert("Test");
+  	alert(this.state.username);
+  	fetch('', {
+  		method: 'POST',
+  		headers: {
+  			'Accept':'application/json',
+  			'Content-Type': 'application/json',
+  		},
+  		body: JSON.stringify({
+  			username: this.state.username,
+  			password: this.state.password
+  		})
+  	})
+
+  	.then((response)=> response.json())
+  	.then((res)=>{
+
+  		if(res.success === true){
+  			AsyncStorage.setItem('user', res.user);
+  			this.props.navigation.navigate('Profile');
+  		}else{
+  			alert(res.message)
+  		}
+  	})
+  	.done();
   }
 
   render() {
@@ -50,7 +71,7 @@ export default class Login extends Component<Props> {
     			<Text style={styles.header}>- Login -</Text>
     			<TextInput style={styles.textInput}
     					   placeholder='Username'
-    					   onChangeText={(user)=> this.setState({username})}
+    					   onChangeText={(username)=> this.setState({username})}
     					   underlineColorAndroid='transparent'
     			/>
     			<TextInput style={styles.textInput}
